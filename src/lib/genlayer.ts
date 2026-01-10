@@ -1,40 +1,20 @@
 // src/lib/genlayer.ts
-import { createClient, createAccount } from 'genlayer-js';
-import { defineChain } from 'viem'; // Import ini dari viem
 
-// Define custom chain berdasarkan RPC & chain ID mu
-export const genlayerCalderaTestnet = defineChain({
-  id: 4221, // Chain ID mu
-  name: 'GenLayer Testnet (Caldera)',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'GEN', // Asumsi native token GEN, bisa ganti kalau beda
-    symbol: 'GEN',
-  },
-  rpcUrls: {
-    default: { http: ['https://genlayer-testnet.rpc.caldera.xyz/http'] },
-    public: { http: ['https://genlayer-testnet.rpc.caldera.xyz/http'] },
-  },
-  blockExplorers: {
-    default: { name: 'GenLayer Explorer', url: 'https://explorer-asimov.genlayer.com' }, // Atau update kalau ada explorer spesifik
-  },
-  // Optional: testnet flag
-  testnet: true,
-});
+// ... kode lain tetap ...
 
-// Export chain ini untuk dipake
-export const getChain = () => genlayerCalderaTestnet;
+const privateKeyRaw = import.meta.env.VITE_PRIVATE_KEY;
 
-// Public client (read-only)
-export const publicClient = createClient({
-  chain: getChain(),
-});
+let account = undefined;
 
-// Wallet client (untuk write tx, butuh account)
-const privateKey = import.meta.env.VITE_PRIVATE_KEY; // Optional, test only! Jangan commit
-let account = privateKey ? createAccount({ privateKey }) : undefined;
+if (privateKeyRaw && typeof privateKeyRaw === 'string' && privateKeyRaw.startsWith('0x')) {
+  account = createAccount({ privateKey: privateKeyRaw as `0x${string}` });
+} else {
+  console.warn('Private key tidak valid atau tidak ada. Pakai wallet connect saja.');
+  account = undefined; // Biar pakai MetaMask/WalletConnect
+}
 
+// Lalu lanjut walletClient seperti biasa
 export const walletClient = createClient({
   chain: getChain(),
-  account, // Kalau undefined, nanti pakai MetaMask/wallet connect
+  account,
 });
