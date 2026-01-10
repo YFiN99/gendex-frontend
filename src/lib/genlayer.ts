@@ -21,23 +21,3 @@ export const genlayerTestnet = defineChain({
   },
   testnet: true,
 });
-
-// Fungsi untuk ambil chain
-export const getChain = () => genlayerTestnet;
-
-// Public client (untuk read-only seperti get_reserves)
-export const publicClient = createClient({
-  chain: getChain(),
-});
-
-// Wallet client (untuk write tx seperti add_liquidity/swap)
-// Pakai MetaMask/WalletConnect secara default (account dari connector)
-export const walletClient = createClient({
-  chain: getChain(),
-  // Account undefined = pakai wallet connect (MetaMask dll)
-  // JANGAN pakai private key hardcode di production!
-  account: undefined,
-});
-    }
-  }
-}
