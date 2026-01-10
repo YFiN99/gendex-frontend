@@ -1,19 +1,24 @@
 // src/lib/genlayer.ts
-
-// ... kode lain tetap ...
+// ... kode atas tetap ...
 
 const privateKeyRaw = import.meta.env.VITE_PRIVATE_KEY;
 
+// Gunakan type guard supaya TS aman
 let account = undefined;
 
-if (privateKeyRaw && typeof privateKeyRaw === 'string' && privateKeyRaw.startsWith('0x')) {
+if (
+  privateKeyRaw &&
+  typeof privateKeyRaw === 'string' &&
+  privateKeyRaw.startsWith('0x') &&
+  privateKeyRaw.length === 66 // 0x + 64 hex chars
+) {
   account = createAccount({ privateKey: privateKeyRaw as `0x${string}` });
 } else {
-  console.warn('Private key tidak valid atau tidak ada. Pakai wallet connect saja.');
-  account = undefined; // Biar pakai MetaMask/WalletConnect
+  console.warn('Private key invalid atau tidak ada. Pakai MetaMask/WalletConnect saja.');
+  account = undefined; // Default ke wallet connect
 }
 
-// Lalu lanjut walletClient seperti biasa
+// Lanjut walletClient seperti biasa
 export const walletClient = createClient({
   chain: getChain(),
   account,
