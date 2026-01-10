@@ -38,23 +38,6 @@ export const walletClient = createClient({
   // JANGAN pakai private key hardcode di production!
   account: undefined,
 });
-
-// Optional: Kalau mau pakai private key test (local dev only, jangan commit!)
-if (import.meta.env.DEV) {
-  const privateKeyRaw = import.meta.env.VITE_PRIVATE_KEY;
-
-  if (
-    typeof privateKeyRaw === 'string' &&
-    privateKeyRaw.startsWith('0x') &&
-    privateKeyRaw.length === 66
-  ) {
-    try {
-      const { createAccount } = await import('genlayer-js');
-      const testAccount = createAccount({ privateKey: privateKeyRaw as `0x${string}` });
-      walletClient.account = testAccount;
-      console.log('Test private key loaded (DEV mode only)');
-    } catch (err) {
-      console.error('Gagal load private key:', err);
     }
   }
 }
